@@ -1,0 +1,701 @@
+.nav-tabs {
+    padding: 0;
+}
+
+.register-event h2, .reg-ev {
+    border: 1px solid #27ae60;
+    margin-top: 10px;
+    padding: 15px;
+}
+
+.fixed-menu, .fixed-btn {
+    display: block;
+}
+
+.fixed-btn {
+    width: 100%;
+}
+
+.error_message {
+    font-weight: bold;
+    color: red;
+}
+
+.success_message {
+    font-weight: bold;
+    color: green;
+}
+
+.logo img {
+       width: 160px;
+    height: 160px;
+    margin: 46px auto;
+    display: block;
+/*    border-bottom: 2px solid #27ae60;*/
+}
+
+.req {
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    color: #27ae60;
+    font-size: 20px;
+}
+
+.input-container {
+    position: relative;
+    display: grid;
+}
+
+.tick-logo {
+        width: 100px;
+    margin-bottom: 10px;
+}
+
+.navbar-brand {
+       color: #27ae60;
+    font-size: 50px;
+    border: 4px solid #fff;
+    padding: 20px;
+    position: relative;
+    bottom: 41px;
+}
+.my-nav a {
+    color: #fff;
+    border: 1px solid #c1c1c1;
+    margin-left: 15px;
+}
+
+.header-background {
+    background-image: url(../images/header-background.jpg);
+    background-size: cover;   
+        height: 430px;
+
+}
+
+.header-back {
+    background-image: url(../images/header-background.jpg);
+    background-size: cover;
+    height: 300px;
+    
+}
+
+.add-event{
+        width: 15%;
+    margin-left: 19px;
+}
+
+.order-1 {
+    margin-right: 12px;
+}
+
+.navbar-collapse {
+    direction: rtl !important;
+}
+
+.order-1 button {
+    width: 100%;
+    margin-left: 5px;
+}
+
+.pocket i {
+    font-size: 60px;
+    color: #27ae60;
+}
+
+.edit-form {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.delete-form {
+    position: absolute;
+    top: 5px;
+    left: 67px;
+}
+
+.edit-reply {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.delete-reply {
+    position: absolute;
+    top: 5px;
+    left: 67px;
+}
+
+.comment_det {
+        text-align: right;
+    font-size: 20px;
+    margin: 22px 0;
+    cursor: pointer;
+    text-decoration: underline;
+    color: #27ae60;
+}
+
+.reply_det, .add-com-btn {
+        text-align: right;
+    font-size: 20px;
+    margin: 22px 0;
+    cursor: pointer;
+    text-decoration: underline; 
+    color: #27ae60;
+}
+
+.btn-success, .alert-success {
+    background-color: #27ae60 !important;
+    color: #fff;
+}
+
+.details {
+    background-color: #27ae60;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.card {
+ width: 100% !important;   
+}
+
+.card-img-top {
+    margin: 0 !important;
+}
+
+.card-title1 {
+    text-align: center !important;
+}
+
+.mess-btn-all {
+        display:block;
+
+   margin:0 auto;
+    width:20%;
+}
+
+.mess-delete-all {
+        display:block;
+        margin-right: 92px;
+    width: 11%;
+}
+
+.mess-form-all {
+   margin:0 auto;
+    width:50%;
+}
+
+.edit_form {
+        width: 50%;
+    margin: 0 auto;
+}
+
+.event-img {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid;
+    margin-bottom: 10px;
+}
+
+.event-post {
+    text-align: right;
+    padding: 10px;
+    margin: 20px 0 40px;
+    position: relative;
+    background-color: #f1f1f1;
+}
+
+.event-reply {
+    text-align: right;
+    padding: 10px;
+    margin: 20px 0 20px;
+    position: relative;
+    background-color: #fff;
+}
+
+.my-menu {
+       overflow-y: scroll;
+    height: 300px;
+        padding: 10px;
+}
+
+.event-det {
+    border: 1px solid #27ae60;
+    padding: 15px;
+    text-align: right;
+    margin: 15px 0;
+}
+
+.send-admin {
+   position: fixed;
+    width: 8%;
+    bottom: 5px;
+    left: 0px;
+    border-radius: 0;
+}
+
+.noti-box {
+    border: 1px solid #27ae60;
+    padding: 15px;
+}
+
+.read-not {
+        text-align: left!important;
+    float: left;
+    border: 1px solid #27ae60;
+    padding: 5px;
+    color: #000;
+}
+
+.redirect {
+        margin: 0 auto;
+    display: block;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.reg-det p {
+        margin-top: 9%;
+    text-align: center;
+    color: #fff;
+    font-weight: 500;
+}
+
+.follow-event {
+        width: auto !important;
+    margin: 16px auto;
+    display: block;
+    float: none;
+        position: relative;
+
+}
+
+.follow-event span {
+    position: absolute;
+    border: 1px solid;
+    padding: 6px 11px !important;
+    color: #000;
+    left: 88px;
+    bottom: -1px;
+}
+
+.dropdown-menu {
+    min-width: 20rem !important;
+}
+
+.dropdown-second {
+        min-width: 10rem !important;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.badge-light {
+padding: 5px 8px;
+    background-color: #27ae60;
+    color: #fff;
+    position: relative;
+    bottom: 16px;
+    right: 1px;
+}
+
+/* table */
+table {
+ border-collapse: collapse;
+    color: #8c8888;
+    font-size: 20px;
+    margin: 20px auto;
+    width: 86%;
+    text-align: center;
+}
+
+td,th {
+    border :  1px solid #000;
+}
+/* table */
+
+table img {
+    width: 50px ;
+    height: 50px;
+}
+
+.home-stats .stat {
+padding: 0 15px;
+    font-size: 20px;
+    margin: 20px 0 20px;
+    color: #fff;
+}
+
+.home-stats .stat a {
+    color: #000;
+}
+
+.home-stats .stat a:hover {
+    text-decoration: none;
+}
+
+.home-stats .stat span {
+    display: block;
+    font-size: 50px;
+}
+
+.home-stats .st-members {
+    border: 1px solid #27ae60;
+    color: #000;
+}
+
+.home-stats .st-pending {
+    background-color: #16a085 ;
+}
+
+.home-stats .st-events {
+    background-color: #8e44ad ;
+}
+
+.home-stats .st-registered {
+    background-color: #34495e ;
+}
+
+.latest {
+    margin-top: 30px;
+}
+
+.panel-heading {
+    background-color: #f5f5f5; 
+        padding: 20px;
+
+}
+
+.panel-body {
+    border: 1px solid;
+        padding: 30px;
+
+}
+
+footer {
+    margin-top: 100px;
+    border-bottom: 1px solid #27ae60;
+    background-color: #27ae60;
+    color: #fff;
+    padding-top: 20px;
+}
+
+.my-noti, .my-noti2 {
+    margin: 5px 0;
+}
+
+.dropdown-menu p {
+    padding: 20px;
+}
+
+/* Start info Section */
+
+.info, .about-info {
+    padding: 4% 0;
+    background-color: #f3f3f3;
+    color: #27ae60;
+    direction: rtl;
+}
+
+.about-info p {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    padding: 20px;
+}
+
+.about-info h3 {
+    font-size: 50px;
+    margin-bottom: 55px;
+}
+
+.info > p {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.info .info-element {
+    margin: 0 3% 4% 0;
+    text-align: center;
+}
+
+.info .info-element h3 {
+    padding: 10px 0;
+    color: #000;
+}
+
+.info .info-element i {
+     font-size: 98px;
+    color: #27ae60;
+    border-radius: 50%;
+    padding: 15px 15px;
+}
+
+.info .info-element p {
+    color: #000;
+        text-align: right !important;
+
+}
+
+.info > i {
+    font-size: 22px;
+    color: #a5a3a3;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+/* End info Section */
+
+.search-form {
+    display: block;
+    border-left: 5px solid #27ae60;
+    border-right: 5px solid #27ae60;
+    padding: 12px;
+    background-color: #fff;
+}
+
+form .select-search {
+    float: right;
+    margin: 0;
+        border-radius: 5px;
+    border-color: #ced4da;
+}
+
+form .bn-search {
+    margin: 4px 0;
+}
+
+.date-box {
+    padding: 8px;
+}
+
+.nav-item a img {
+width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: relative;
+    bottom: 5px;
+}
+
+select {
+    padding: 10px;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+.last-events {
+    padding: 10px;
+    border: 1px solid #27ae60;
+    margin-top: 52px;
+}
+
+form .select-box {
+    padding: 5px;
+}
+
+/* start projects section */
+
+#gallery h2 {
+    color: #000;
+    margin-bottom: 30px;
+    padding: 20px;
+    text-align: right;
+    font-size: 17px;
+  }
+  
+  #gallery {
+    margin-bottom: 10px;
+    background-color: #fff;
+    padding: 10px 0;
+    direction: rtl;
+  }
+  
+  #gallery h2 span {
+    color: #000;
+  }
+  
+  .portfolio {
+    margin-top: 20px;
+  }
+  
+  .portfolio p {
+    color: #000;
+    padding: 7px;
+    margin: 0 auto 20px 0;
+    font-size: 17px;
+    border: 1px solid;
+  }
+  
+  .port-img .caption {
+   
+  }
+
+.nav-link i {
+    color: #27ae60;
+    font-size: 20px;
+}
+
+
+.home-stat, .details-stat {
+        position: absolute;
+    right: 15px;
+    z-index: 1;
+    border-radius: 0;
+    padding: 4px 12px;
+    background-color: #27ae60;
+    color: #fff;
+    font-weight: 600;
+    border: 0;
+}
+
+.details-stat {
+    right: 0;
+}
+  
+  .portfolio .port-img {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #27ae60;
+  }
+  
+  .portfolio .port-img img {
+    width: 100%;
+        height: 300px;
+    border: 1px solid #27ae60;
+
+  }
+  
+  .portfolio .port-img h3 {
+
+  }
+  
+  .portfolio .port-img h3 a {
+      font-size: 16px;
+      color: #000;
+  }
+
+  .portfolio .port-img h3 a:hover {
+      color: #27ae60;
+}
+
+  #gallery .nav {
+    border-bottom: 1px solid #27ae60;
+    border-radius: 0;
+  }
+  
+  .nav-tabs .nav-link.active {
+    border: 2px solid #27ae60 !important;
+    color: #000;
+    border-radius: 0;
+  }
+  
+  .nav-tabs .nav-link {
+    border: 0 !important;
+      color: #27ae60;
+  }
+  
+  .nav-tabs .nav-item {
+    margin-bottom: 2px;
+  }
+  
+  /* End projects section */
+
+header {
+    padding: 0;
+}
+
+header button {
+        width: 30%;
+}
+
+.navbar {
+    direction: rtl;
+    width: 100%;
+  }
+  
+  .navbar-collapse {
+    direction: ltr;
+  }
+  
+.login-form .form-button {
+    text-align: center;
+  }
+  
+  .login-form {
+    width: 50%;
+    margin: 30px auto;
+  }
+  
+  .login-form input {
+    margin-bottom: 15px;
+  }
+  
+  form textarea {
+    width: 100%;
+    direction: rtl;
+  }
+  
+  form input {
+    float: right;
+  }
+  
+.event-detail {
+    direction: rtl;
+}
+
+h2 {
+    text-align: right;
+}
+
+.ticket-date, .pocket {
+    border: 1px solid;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.not-find {
+    display: block;
+    width: 100%;
+}
+
+.pocket .alert-success {
+    padding: 6px 13px;
+}
+
+button {
+    width: 100%;
+}
+
+.register-event {
+    direction: rtl
+}
+
+button {
+    width: 100%;
+}
+
+.price {
+    border: 1px solid;
+    border-radius: 25px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    margin: 30px auto;
+    text-align: center;
+    padding-top: 10px;
+    border: 0;
+}
+
+.card-img-top {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto !important;
+}
