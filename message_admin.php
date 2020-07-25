@@ -2,35 +2,25 @@
 
 session_start();
 
- include 'connection.php'; 
+ require_once('modules/Database.php');
+ 
+ $db = new Database();
 
 if (isset($_SESSION['usermail'])) { 
-
-    
-   
         
          $read_n = 0;
 
         $message = $_POST['message'];
         $mess_by = $_POST['mess_by'];
-
          
-           $noti = $con->prepare(" INSERT INTO messages ( message, mess_by, mess_to, read_n ) VALUES ('$message', '$mess_by', '2', '$read_n')");
-        $noti->execute(array($message, $mess_by, 2, $read_n));
+        $db->query(" INSERT INTO messages ( message, mess_by, mess_to, read_n ) VALUES ('$message', '$mess_by', '2', '$read_n')");
+        $db->execute();
 
 header('Location: ' . $_SERVER['HTTP_REFERER']);
 
-           
-      
     }
 
-         
-        
-
-
-
-
-} else {
+else {
         header('location:add-event.php');
 }
 

@@ -1,35 +1,27 @@
-<?php 
+<?php
 
 session_start();
 
+if (isset($_SESSION['usermail']))
+{
 
-if (isset($_SESSION['usermail'])) { ?>
+    require_once ('modules/Database.php');
 
+    require_once ('layouts/header.php');
 
-<?php include 'connection.php'; 
+    $db = new Database();
 
-    include "links.php";
-
-    include "header.php"; 
-                                   
-                                   
 ?>
-
-
-    
     
    <div class="container text-center">
 
-
-
        <h2 class="event-det text-center">المتابعين</h2>
-                  
-                                   
-    <?php 
-                                   
-        $ID = isset($_GET['id']) ? $_GET['id'] : '';
+                                             
+    <?php
 
-        ?>
+    $ID = isset($_GET['id']) ? $_GET['id'] : '';
+
+?>
   
 
 <div class="row">
@@ -49,14 +41,12 @@ if (isset($_SESSION['usermail'])) { ?>
         
         
         <?php
-                                   
-                                   $id = $_GET['id'];
-                                   
-         $stmtpaid = $con->prepare("SELECT * FROM followers WHERE followed='$ID'");
-        $stmtpaid->execute();
-        $Followers = $stmtpaid->fetchAll();
-                                   
-        ?>
+    $id = $_GET['id'];
+
+    $db->query("SELECT * FROM followers WHERE followed='$ID'");
+    $Followers = $db->resultSet();
+
+?>
   
 
 <table>
@@ -68,24 +58,19 @@ if (isset($_SESSION['usermail'])) { ?>
     
                     
         <?php
-    
-    foreach ((array) $Followers as $Follower) {
-        
+    foreach ((array)$Followers as $Follower)
+    {
+
         echo "<tr>";
-                echo "<td>" . $Follower['follow_id'] . "</td>";
+        echo "<td>" . $Follower->follow_id . "</td>";
 
-
-        echo "<td>" . $Follower['follower_name'] . "</td>";
-        
+        echo "<td>" . $Follower->follower_name . "</td>";
 
         echo "</tr>";
-        
+
     }
-    
-            
-            ?>
-    
-    
+
+?>
 
 </table>
         
@@ -95,14 +80,15 @@ if (isset($_SESSION['usermail'])) { ?>
        </div>
         
         <?php
-                                   
-} else {
-        header('location:login.php');
+}
+else
+{
+    header('location:login.php');
 }
 
 ?>
 
-<?php include 'footer.php' ?>
+<?php require_once ('layouts/footer.php'); ?>
        
        <script>
         $(document).ready(function(){

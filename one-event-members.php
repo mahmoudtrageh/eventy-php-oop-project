@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <?php
 session_start();
-if (isset($_SESSION['usermail'])) {?>
+if (isset($_SESSION['usermail'])) {
+     
+    require_once('modules/Database.php');
 
+    require_once ('layouts/header.php');
 
-<?php include 'connection.php'; ?>
-    
-    <?php include "links.php" ?>
-
-<?php include "header.php" ;
+    $db = new Database();
 
 
 $ID = isset($_GET['id']) ? $_GET['id'] : '';
@@ -24,14 +23,12 @@ if ( $do == 'Manage'){
         $query = 'AND reg_status=0';
     }
     
-    $stmtManage = $con->prepare("SELECT * FROM users_registered WHERE events_id='$ID' $query");
-    $stmtManage->execute();
-    $usersRegistered = $stmtManage->fetchAll();
+    $db->query("SELECT * FROM users_registered WHERE events_id='$ID' $query");
+    $usersRegistered = $db->resultSet();
     
     
-    $stmtManage1 = $con->prepare("SELECT * FROM users_registered WHERE events_id='$ID'");
-    $stmtManage1->execute();
-    $usersRegistered1 = $stmtManage1->fetchAll();
+    $db->query("SELECT * FROM users_registered WHERE events_id='$ID'");
+    $usersRegistered1 = $db->resultSet();
     
     
     
@@ -110,23 +107,23 @@ function myFunction() {
     <?php
             
             "</td>";
-        echo "<td>" . $Reguser['firstname'] . "</td>";
-        echo "<td>" . $Reguser['lastname'] . "</td>";
-        echo "<td>" . $Reguser['regmail'] . "</td>";
-                echo "<td>" . $Reguser['phone_num'] . "</td>";
-                echo "<td class='info'>" . $Reguser['reg_code'] . "</td>";
+        echo "<td>" . $Reguser->firstname . "</td>";
+        echo "<td>" . $Reguser->lastname . "</td>";
+        echo "<td>" . $Reguser->regmail . "</td>";
+                echo "<td>" . $Reguser->phone_num . "</td>";
+                echo "<td class='info'>" . $Reguser->reg_code . "</td>";
         echo "<td class='setting'>
         
-        <a class='btn btn-danger confirm' href='one-event-members.php?do=Delete&regId=" . $Reguser['regId'] . "'>حذف</a> |
+        <a class='btn btn-danger confirm' href='one-event-members.php?do=Delete&regId=" . $Reguser->regId . "'>حذف</a> |
         
         ";
         ?>
     
         <span class="btn btn-success mess-btn">رسالة</span>
 
-      <form class="mess-form" action='send_message.php?id=<?php echo $Reguser['events_id'] ?>' method='POST' enctype="multipart/form-data">
+      <form class="mess-form" action='send_message.php?id=<?php echo $Reguser->events_id ?>' method='POST' enctype="multipart/form-data">
             <input name='mess_by' type='hidden' value='<?php echo $_SESSION['ID']; ?>'>
-            <input name='mess_to' type='hidden' value='<?php echo $Reguser['regby'] ?>'>
+            <input name='mess_to' type='hidden' value='<?php echo $Reguser->regby ?>'>
             <textarea name='message' class='form-control' rows='5'></textarea>  
             <button type="submit" name ='submit' class="btn btn-primary">أرسل</button>
 
@@ -138,8 +135,8 @@ function myFunction() {
         
         </td>";
         
-            if($Reguser['reg_status'] == 0) {
-                  echo "<td><a class='btn btn-success not-activate' href='one-event-members.php?do=Active&regId=" . $Reguser['regId'] . "'>تفعيل</a></td>"; 
+            if($Reguser->reg_status == 0) {
+                  echo "<td><a class='btn btn-success not-activate' href='one-event-members.php?do=Active&regId=" . $Reguser->regId . "'>تفعيل</a></td>"; 
                                 echo "<td></td>";
 
 
@@ -192,12 +189,12 @@ function myFunction() {
         echo "<tr>";
         
  echo "<td>1</td>";
-        echo "<td>" . $Reguser1['firstname'] . "</td>";
-        echo "<td>" . $Reguser1['lastname'] . "</td>";
-        echo "<td>" . $Reguser1['regmail'] . "</td>";
-        echo "<td class='info'>" . $Reguser1['reg_code'] . "</td>";
+        echo "<td>" . $Reguser1->firstname . "</td>";
+        echo "<td>" . $Reguser1->lastname . "</td>";
+        echo "<td>" . $Reguser1->regmail . "</td>";
+        echo "<td class='info'>" . $Reguser1->reg_code . "</td>";
         echo "<td class='setting'>
-        <a class='btn btn-danger confirm' href='one-event-members.php?do=Delete&regId=" . $Reguser1['regId'] . "'>حذف</a> |
+        <a class='btn btn-danger confirm' href='one-event-members.php?do=Delete&regId=" . $Reguser1->regId . "'>حذف</a> |
                 
         "; 
     
@@ -205,9 +202,9 @@ function myFunction() {
     
     <span class="btn btn-success mess-btn">رسالة</span>
                 
-        <form class="mess-form" action='send_message.php?id=<?php echo $Reguser1['events_id'] ?>' method='POST' enctype="multipart/form-data">
+        <form class="mess-form" action='send_message.php?id=<?php echo $Reguser1->events_id ?>' method='POST' enctype="multipart/form-data">
             <input name='mess_by' type='hidden' value='<?php echo $_SESSION['ID']; ?>'>
-            <input name='mess_to' type='hidden' value='<?php echo $Reguser1['regby'] ?>'>
+            <input name='mess_to' type='hidden' value='<?php echo $Reguser1->regby ?>'>
             <textarea name='message' class='form-control' rows='5'></textarea>  
             <button type="submit" name ='submit' class="btn btn-primary">أرسل</button>
 
@@ -249,15 +246,14 @@ function myFunction() {
     $regId = $_GET['regId'];
     
     
-     $stmt = $con->prepare("SELECT reg_status FROM users_registered WHERE regId = '$regId'");
-                $stmt->execute();
-                $row = $stmt->fetch();
-                $count = $stmt->rowCount();
+     $db->query("SELECT reg_status FROM users_registered WHERE regId = '$regId'");
+                $row = $db->single();
+                $count = $db->rowCount();
     
                 if ($count > 0 ) {
             
         
-                    $_SESSION['reg_status'] = $row['reg_status'];
+                    $_SESSION['reg_status'] = $row->reg_status;
 
                     }
     
@@ -266,8 +262,10 @@ function myFunction() {
                  
                          $regStatus = 1;
 
-        $stmt = $con->prepare("UPDATE users_registered SET reg_status = ? WHERE regId = ? ");
-        $stmt->execute(array($regStatus, $regId));
+        $db->query("UPDATE users_registered SET reg_status = :reg_status WHERE regId = :regId ");
+        $db->bind(':reg_status', $regStatus);
+        $db->bind(':regId', $regId);
+        $stmt->execute();
         
                     
    header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -284,17 +282,17 @@ function myFunction() {
     
     $regUserId = isset($_GET['regId']) && is_numeric($_GET['regId']) ? intval($_GET['regId']) : 0;
                                    
-        $stmt = $con->prepare("SELECT * FROM users_registered WHERE regId = ? LIMIT 1");
+        $db->query("SELECT * FROM users_registered WHERE regId = ? LIMIT 1");
 
-        $stmt->execute(array($regUserId));
+        $db->execute();
        
-        $count = $stmt->rowCount();
+        $count = $db->rowCount();
                                    
         if ($count > 0 ) { 
          
-        $stmt = $con->prepare("DELETE FROM users_registered WHERE regId = :regId ");
+        $db->query("DELETE FROM users_registered WHERE regId = :regId ");
             
-        $stmt->bindParam(":regId", $regUserId);
+        $stmt->bind(":regId", $regUserId);
 
         $stmt->execute();
             
@@ -314,17 +312,17 @@ function myFunction() {
     
     $regDeleteId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
                                    
-        $stmt = $con->prepare("SELECT * FROM users_registered WHERE events_id = ? LIMIT 1");
+        $db->query("SELECT * FROM users_registered WHERE events_id = ? LIMIT 1");
 
-        $stmt->execute(array($regDeleteId));
+        $db->execute();
        
-        $count = $stmt->rowCount();
+        $count = $db->rowCount();
                                    
         if ($count > 0 ) { 
          
-        $stmt = $con->prepare("DELETE FROM users_registered WHERE events_id = :events_id ");
+        $db->query("DELETE FROM users_registered WHERE events_id = :events_id ");
             
-        $stmt->bindParam(":events_id", $regDeleteId);
+        $db->bind(":events_id", $regDeleteId);
 
         $stmt->execute();
             
@@ -341,7 +339,7 @@ function myFunction() {
 }
 ?>
 <!-- End projects section -->
-<?php include 'footer.php' ?>
+<?php require_once ('layouts/footer.php'); ?>
 
 <script>
 

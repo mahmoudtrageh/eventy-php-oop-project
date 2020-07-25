@@ -2,13 +2,14 @@
 // start session
 session_start();
 // connection to data base
-include 'connection.php'; 
+
+require_once('modules/Database.php');
+
 // when the user signed in
 if (isset($_SESSION['usermail'])) { 
-// add links page     
-include "links.php";
+
 // add header section    
-include "header.php";?>
+require_once ('layouts/header.php');?>
 <!-- start add event section -->
 <div class="register-event text-right">
   <div class="container">
@@ -140,7 +141,7 @@ include "header.php";?>
 </div>
 <!-- end if the user signed in -->
 <?php } else {
-    header('location:login.php');
+    header('location:./auth/login.php');
 }
 
-include "footer.php"; ?>
+require_once ('layouts/footer.php'); ?>

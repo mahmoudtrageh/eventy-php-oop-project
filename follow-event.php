@@ -1,55 +1,52 @@
-<?php 
+<?php
 
 session_start();
 
- include 'connection.php'; 
+require_once ('modules/Database.php');
 
-if (isset($_SESSION['usermail'])) { 
-    
+$db = new Database();
+
+if (isset($_SESSION['usermail']))
+{
+
     $id = $_GET['id'];
-         
-                if(isset($_POST['follow-event'])) {
-                    
-                     $stmt2 = $con->prepare("SELECT * FROM users");
-                $stmt2 ->execute();
-                $row2 = $stmt2 ->fetch();
-                $count2 = $stmt2 ->rowCount();
-    
-                if ($count2  > 0 ) {
-            
-            // register session with username
-                    
-                   
-                    
-                     $follower = $_SESSION['ID'];
-                    $follower_name = $_SESSION['firstname'];
-                    
-                   
-                    
-                                    }
-                    
-                       $stmt = $con->prepare("SELECT EventTitle FROM events WHERE id='$id'");
-                $stmt ->execute();
-                $row = $stmt ->fetch();
-                $count = $stmt ->rowCount();
-    
-                if ($count  > 0 ) {
-            
-            // register session with username
-                    
-                     $followed_name_event = $_SESSION['EventTitle'];
-                    $followed_event = $id;
-                }
-                    
-                     $ins = $con->prepare(" INSERT INTO follow_event (follower, followed_event, follower_name, followed_name ) VALUES ('$follower', '$followed_event', '$follower_name', '$followed_name_event')");
-        $ins->execute(array($follower, $followed_event, $follower_name, $followed_name_event));
-                    
-header('Location: ' . $_SERVER['HTTP_REFERER']);
 
-                    
-                }
-                }
-         
-            ?>
-              
-         
+    if (isset($_POST['follow-event']))
+    {
+
+        $db->query("SELECT * FROM users");
+        $row2 = $db->single();
+        $count2 = $db->rowCount();
+
+        if ($count2 > 0)
+        {
+
+            // register session with username
+            
+
+            $follower = $_SESSION['ID'];
+            $follower_name = $_SESSION['firstname'];
+
+        }
+
+        $db->query("SELECT EventTitle FROM events WHERE id='$id'");
+        $row = $db->single();
+        $count = $db->rowCount();
+
+        if ($count > 0)
+        {
+
+            // register session with username
+            $followed_name_event = $_SESSION['EventTitle'];
+            $followed_event = $id;
+        }
+
+        $db->query(" INSERT INTO follow_event (follower, followed_event, follower_name, followed_name ) VALUES ('$follower', '$followed_event', '$follower_name', '$followed_name_event')");
+        $db->execute();
+
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+
+    }
+}
+
+?>

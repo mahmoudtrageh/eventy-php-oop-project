@@ -1,32 +1,37 @@
-<?php 
+<?php
 
 session_start();
 
- include 'connection.php'; 
+require_once ('modules/Database.php');
 
-if (isset($_SESSION['usermail'])) { ?>
+$db = new Database();
+
+if (isset($_SESSION['usermail']))
+{ ?>
 
 
-<?php 
-    
-                
-                $comment_event = $_GET['id'];
+<?php
 
-        $reply = $_POST['reply_content'];
-        $comment_id = $_POST['comment_id'];
+    $comment_event = $_GET['id'];
+
+    $reply = $_POST['reply_content'];
+    $comment_id = $_POST['comment_id'];
     $user_id = $_POST['user_id'];
-        $type = $_POST['type'];
+    $type = $_POST['type'];
 
-        $reply_id = $_POST['reply_id'];
+    $reply_id = $_POST['reply_id'];
 
-         $query = $con->prepare("UPDATE replies SET reply = '$reply' WHERE comment_id='$comment_id' AND user_id='$user_id' AND reply_id='$reply_id'");
-        $query->execute();  
+    $db->query("UPDATE replies SET reply = '$reply' WHERE comment_id='$comment_id' AND user_id='$user_id' AND reply_id='$reply_id'");
+    $db->execute();
 
-            if($type == 'user'){
-             header('location:user-event-dashboard.php?id=' . $comment_event . '');
-        
-    } else {
-                     header('location:one-event-dashboard.php?id=' . $comment_event . '');
+    if ($type == 'user')
+    {
+        header('location:user-event-dashboard.php?id=' . $comment_event . '');
+
+    }
+    else
+    {
+        header('location:one-event-dashboard.php?id=' . $comment_event . '');
 
     }
 

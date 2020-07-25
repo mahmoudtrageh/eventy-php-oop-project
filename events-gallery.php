@@ -1,9 +1,7 @@
-<?php 
-
+<?php
 session_start();
 
- include 'connection.php'; 
- include "links.php";
+require_once ('modules/Event.php');
 
 ?>
 
@@ -12,42 +10,25 @@ session_start();
 
 
 <?php
-    
+$e = new Event();
 
-if (isset($_SESSION['usermail'])) {
-         include "header.php";
-                } else {
-         include "header2.php";
-    }
+if (isset($_SESSION['usermail']))
+{
+    // the header of signed in user
+    require_once ('layouts/header.php');
+}
+else
+{
+    // the header of user not signed in
+    require_once ('layouts/header2.php');
+}
+
+$freeEvents = $e->getEventByStatus('مجاني');
+$paidevents = $e->getEventByStatus('مدفوع');
+$requirePaids = $e->getEventByStatus('الدفع ضروري');
+$allEvents = $e->getEvents();
 
 ?>
-
-<!--   start projects section     -->        
-  
-        
-        <?php
-      
-    if(!isset($_POST['submit'])) {
-     
-$ID = isset($_SESSION['ID']) ? $_SESSION['ID'] : '';
-
-
-        $stmt2 = $con->prepare("SELECT * FROM events WHERE status = 'مجاني'");
-$stmt2->execute();
-$events = $stmt2->fetchAll();
-        
- $stmt3 = $con->prepare("SELECT * FROM events WHERE status = 'مدفوع'");
-$stmt3->execute();
-$paidevents = $stmt3->fetchAll();
-        
-        $stmt4 = $con->prepare("SELECT * FROM events WHERE status = 'الدفع ضروري'");
-$stmt4->execute();
-$requirePaids = $stmt4->fetchAll();
-        
-    }
-
-    
-    ?>
         
         
         </div>
@@ -65,15 +46,15 @@ $requirePaids = $stmt4->fetchAll();
           
            <li class="nav-item">
           <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all"
-            aria-selected="true">(<?php echo countItem('id', 'events', 'مدفوع') + countItem('id', 'events', 'مجاني') + countItem('id', 'events', 'الدفع ضروري') ?>) الجميع</a>
+            aria-selected="true">الجميع</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="paid-tab" data-toggle="tab" href="#paid" role="tab" aria-controls="paid"
-            aria-selected="false">(<?php echo countItem('id', 'events', 'مدفوع') + countItem('id', 'events', 'الدفع ضروري') ?>) المدفوعة</a>
+            aria-selected="false">مدفوع</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="free-tab" data-toggle="tab" href="#free" role="tab" aria-controls="free"
-            aria-selected="false">(<?php echo countItem('id', 'events', 'مجاني') ?>) المجانية</a>
+            aria-selected="false">مجاني</a>
         </li>
           
        
@@ -88,153 +69,43 @@ $requirePaids = $stmt4->fetchAll();
 
     <?php
 
-        
-            if($paidevents || $events || $requirePaids) {
+foreach ((array)$allEvents as $allEvent)
+{
 
-                foreach ((array) $paidevents as $paidevent) {
-                    
-                    
-                    $event_date = $paidevent['date'];
-                    $finish_date = $paidevent['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
+    $event_date = $allEvent->date;
 
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
+    $finish_date = $allEvent->finish_date;
 
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
-                    
+    $e->calculateTime($event_date, $finish_date);
 
-                    echo "<div class='col-md-4'>";
-                    echo"<span class='home-stat alert alert-success'>مدفوع</span>";
-                    echo "<div class='port-img'>";
-                    
-                    echo "<a href='event-details.php?id=" . $paidevent['id'] . "'><img alt='an example' class='img-fluid' src='" .  $paidevent['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $paidevent['id'] . "'>" . $paidevent['EventTitle'] . "</a></h3>";
-                    
-                        if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p>  
+    echo "<div class='col-md-4'>";
+    echo "<span class='home-stat alert alert-success'>" . $allEvent->status . "</span>";
+    echo "<div class='port-img'>";
+
+    echo "<a href='event-details.php?id=" . $allEvent->id . "'><img alt='an example' class='img-fluid' src='" . $allEvent->EventImg . "' /></a>";
+    echo "<h3><a href='event-details.php?id=" . $allEvent->id . "'>" . $allEvent->EventTitle . "</a></h3>";
+
+    if (($e->event_start - $e->my_current) < 0)
+    {
+
+        echo " <p> انتهي </p>";
+    }
+    else if (($e->event_start - $e->my_current) == 0)
+    {
+        echo "<p> يحدث اليوم </p>";
+    }
+    else
+    {
+?>
+                            <p> يحدث بعد : <?php echo ($e->event_start - $e->my_current); ?> يوم</p>  
                             <?php
-                        }
-                                    
-                    echo "</div>";
-                    echo "</div>";
-                }
-        
-    
+    }
 
-       foreach ((array) $events as $event) {
-$event_date = $event['date'];
-                    $finish_date = $event['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
+    echo "</div>";
+    echo "</div>";
+}
 
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
-
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
-           
-                    echo "<div class='col-md-4'>";
-                               echo"<span class='home-stat alert alert-success'>مجاني</span>";
-
-                    echo "<div class='port-img'>";
-                    echo "<a href='event-details.php?id=" . $event['id'] . "'><img alt='an example' class='img-fluid' src='" .  $event['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $event['id'] . "'>" . $event['EventTitle'] . "</a></h3>";
-           if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p> 
-                            <?php
-                        }
-                    echo "</div>";
-                    echo "</div>";
-           
-
-//                       }
-                }
-                
-                foreach ((array) $requirePaids as $requirePaid) {
-$event_date = $requirePaid['date'];
-                    $finish_date = $requirePaid['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
-
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
-
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
-                    echo "<div class='col-md-4'>";
-                                        echo"<span class='home-stat alert alert-success'>ضروري الدفع</span>";
-
-                    echo "<div class='port-img'>";
-                    echo "<a href='event-details.php?id=" . $requirePaid['id'] . "'><img alt='an example' class='img-fluid' src='" .  $requirePaid['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $requirePaid['id'] . "'>" . $requirePaid['EventTitle'] . "</a></h3>";
-                    if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p> 
-                            <?php
-                        }
-                    echo "</div>";
-                    echo "</div>";
-           
-
-        
-                }
-//                }
-                
-            }else {
-                
-                 echo "  <h1 class='text-center alert alert-danger'>لا يوجد محتوي</h1>";
-                    echo "<a class='btn btn-outline-secondary' style='display:block;margin:0 auto;margin:20px 0 20px;' href='add-event.php'>أضف فعاليتك الآن</a>";
-                
-            }
-
-    ?>
+?>
                                 
                   
                   </div>                
@@ -249,103 +120,85 @@ $event_date = $requirePaid['date'];
             <div class="row">
 
     <?php
-        
-         if($paidevents || $requirePaids){
-                foreach ((array) $paidevents as $paidevent) {
-                    
-                    $event_date = $paidevent['date'];
-                    $finish_date = $paidevent['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
+if ($paidevents || $requirePaids)
+{
+    foreach ((array)$paidevents as $paidevent)
+    {
 
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
+        $event_date = $paidevent->date;
+        $finish_date = $paidevent->finish_date;
 
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
+        $e->calculateTime($event_date, $finish_date);
 
-                    echo "<div class='col-md-4'>";
-                                                                                echo"<span class='home-stat alert alert-success'>مدفوع</span>";
+        echo "<div class='col-md-4'>";
+        echo "<span class='home-stat alert alert-success'>مدفوع</span>";
 
-                    echo "<div class='port-img'>";
+        echo "<div class='port-img'>";
 
-                    
-                    echo "<a href='event-details.php?id=" . $paidevent['id'] . "'><img alt='an example' class='img-fluid' src='" .  $paidevent['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $paidevent['id'] . "'>" . $paidevent['EventTitle'] . "</a></h3>";
-                    if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p> 
+        echo "<a href='event-details.php?id=" . $paidevent->id . "'><img alt='an example' class='img-fluid' src='" . $paidevent->EventImg . "' /></a>";
+        echo "<h3><a href='event-details.php?id=" . $paidevent->id . "'>" . $paidevent->EventTitle . "</a></h3>";
+        if (($e->event_start - $e->my_current) < 0)
+        {
+
+            echo " <p> انتهي </p>";
+        }
+        else if (($e->event_start - $e->my_current) == 0)
+        {
+            echo "<p> يحدث اليوم </p>";
+        }
+        else
+        {
+?>
+                            <p> يحدث بعد : <?php echo ($e->event_start - $e->my_current); ?> يوم</p> 
                             <?php
-                        }
-                    echo "</div>";
-                    echo "</div>";
+        }
+        echo "</div>";
+        echo "</div>";
 
-                }
-             
-             foreach ((array) $requirePaids as $requirePaid) {
+    }
 
-                 $event_date = $rquirePaid['date'];
-                    $finish_date = $requirePaid['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
+    foreach ((array)$requirePaids as $requirePaid)
+    {
 
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
+        $event_date = $requirePaid->date;
+        $finish_date = $requirePaid->finish_date;
 
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
-                    echo "<div class='col-md-4'>";
-                                                                             echo"<span class='home-stat alert alert-success'>ضروري الدفع</span>";
+        $e->calculateTime($event_date, $finish_date);
 
-                    echo "<div class='port-img'>";
+        echo "<div class='col-md-4'>";
+        echo "<span class='home-stat alert alert-success'>ضروري الدفع</span>";
 
-                    echo "<a href='event-details.php?id=" . $requirePaid['id'] . "'><img alt='an example' class='img-fluid' src='" .  $requirePaid['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $requirePaid['id'] . "'>" . $requirePaid['EventTitle'] . "</a></h3>";
-                 if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p> 
+        echo "<div class='port-img'>";
+
+        echo "<a href='event-details.php?id=" . $requirePaid->id . "'><img alt='an example' class='img-fluid' src='" . $requirePaid->EventImg . "' /></a>";
+        echo "<h3><a href='event-details.php?id=" . $requirePaid->id . "'>" . $requirePaid->EventTitle . "</a></h3>";
+        if (($e->event_start - $e->my_current) < 0)
+        {
+
+            echo " <p> انتهي </p>";
+        }
+        else if (($e->event_start - $e->my_current) == 0)
+        {
+            echo "<p> يحدث اليوم </p>";
+        }
+        else
+        {
+?>
+                            <p> يحدث بعد : <?php echo ($e->event_start - $e->my_current); ?> يوم</p> 
                             <?php
-                        }
-                    echo "</div>";
-                    echo "</div>";
-                                 }
+        }
+        echo "</div>";
+        echo "</div>";
+    }
 
-        
-             
-         }else {
-             
-             echo "  <h1 class='text-center'>لا يوجد محتوي</h1>";
-                    echo "<a class='btn btn-outline-secondary' style='display:block;margin:0 auto;margin:20px 0 20px;' href='add-event.php'>أضف فعاليتك الآن</a>";
-             
-         }
+}
+else
+{
+
+    echo "  <h1 class='text-center'>لا يوجد محتوي</h1>";
+    echo "<a class='btn btn-outline-secondary' style='display:block;margin:0 auto;margin:20px 0 20px;' href='add-event.php'>أضف فعاليتك الآن</a>";
+
+}
 
 ?>
                 
@@ -359,60 +212,54 @@ $event_date = $requirePaid['date'];
             <div class="row">
 
 
-               <?php     
-    if($events) {
-                foreach ((array) $events as $event) {
-                    
-                    $event_date = $event['date'];
-                    $finish_date = $event['finish_date'];
-                    
-                     $event_day = date("d", strtotime($event_date));
-                                    $event_month = date("m", strtotime($event_date)) * 30;
+               <?php
 
-                                   
-                                   $finish_day = date("d", strtotime($finish_date));
-                                $finish_month = date("m", strtotime($finish_date)) * 30;
-                                   
-                                   $event_start = $event_month + $event_day;
-                                   
-                                   $event_finish = $finish_month + $finish_day;
-                                   
+if ($freeEvents)
+{
+    foreach ((array)$freeEvents as $freeEvent)
+    {
 
-                                     $current_day = date('d'); 
-                                    $current_month = date('m') * 30; 
-                                   
-                                   $my_current = $current_month + $current_day;
+        $event_date = $freeEvent->date;
+        $finish_date = $freeEvent->finish_date;
 
-                    echo "<div class='col-md-4'>";
-                                                                                echo"<span class='home-stat alert alert-success'>مجاني</span>";
+        $e->calculateTime($event_date, $finish_date);
 
-                    echo "<div class='port-img'>";
-                    
-                    echo "<a href='event-details.php?id=" . $event['id'] . "'><img alt='an example' class='img-fluid' src='" .  $event['EventImg'] . "' /></a>";
-                        echo "<h3><a href='event-details.php?id=" . $event['id'] . "'>" . $event['EventTitle'] . "</a></h3>";
-                    if (($event_start - $my_current) < 0) {
-                
-                                       echo " <p> انتهي </p>";
-                        } else if (($event_start - $my_current) == 0) {
-                            echo "<p> يحدث اليوم </p>";
-                        } else {
-                            ?>
-                            <p> يحدث بعد : <?php echo ($event_start - $my_current); ?> يوم</p>
+        echo "<div class='col-md-4'>";
+        echo "<span class='home-stat alert alert-success'>" . $freeEvent->status . "</span>";
+
+        echo "<div class='port-img'>";
+
+        echo "<a href='event-details.php?id=" . $freeEvent->id . "'><img alt='an example' class='img-fluid' src='" . $freeEvent->EventImg . "' /></a>";
+        echo "<h3><a href='event-details.php?id=" . $freeEvent->id . "'>" . $freeEvent->EventTitle . "</a></h3>";
+        if (($e->event_start - $e->my_current) < 0)
+        {
+
+            echo " <p> انتهي </p>";
+        }
+        else if (($e->event_start - $e->my_current) == 0)
+        {
+            echo "<p> يحدث اليوم </p>";
+        }
+        else
+        {
+?>
+                            <p> يحدث بعد : <?php echo ($e->event_start - $e->my_current); ?> يوم</p>
                             <?php
-                        }
-                    echo "</div>";
-                    echo "</div>";
+        }
+        echo "</div>";
+        echo "</div>";
 
-        
-                }
-        }else {
-             
-             echo "  <h1 class='text-center alert alert-danger'>لا يوجد محتوي</h1>";
-                    echo "<a class='btn btn-outline-secondary' style='display:block;margin:0 auto;margin:20px 0 20px;' href='add-event.php'>أضف فعاليتك الآن</a>";
-             
-         }
-    
-    ?>
+    }
+}
+else
+{
+
+    echo "  <h1 class='text-center alert alert-danger'>لا يوجد محتوي</h1>";
+    echo "<a class='btn btn-outline-secondary' style='display:block;margin:0 auto;margin:20px 0 20px;' href='add-event.php'>أضف فعاليتك الآن</a>";
+
+}
+
+?>
             
           
 
@@ -429,10 +276,10 @@ $event_date = $requirePaid['date'];
 </section>
         
         <?php
-        
-        if (isset($_SESSION['usermail'])) {
+if (isset($_SESSION['usermail']))
+{
 
-        ?>
+?>
         
         <button type="button" class="btn btn-success send-admin" data-toggle="modal" data-target="#exampleModal">
   راسل الإدارة
@@ -461,9 +308,8 @@ $event_date = $requirePaid['date'];
   </div>
 </div>
         <?php
-            
-        }
-        ?>
+}
+?>
         
 <!-- End projects section -->
-<?php include 'footer.php' ?>
+<?php require_once ('layouts/footer.php'); ?>

@@ -2,13 +2,12 @@
     // start session
     session_start();
     // connection to data base
-    include 'connection.php'; 
+require_once('modules/Database.php');
     // when the user signed in
     if (isset($_SESSION['usermail'])) { 
-    // add links page     
-    include "links.php";
+
     // add header section    
-    include "header.php";
+    require_once ('layouts/header.php');
     // get data send by edit comment from
     $comment_content = $_POST['comment_content'];
     $comment_id = $_POST['comment_id'];
@@ -33,5 +32,5 @@
         header('location:login.php');
     }
 
-    include 'footer.php';
+    require_once ('layouts/footer.php'); 
 ?>

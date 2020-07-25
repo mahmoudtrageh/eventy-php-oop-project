@@ -3,17 +3,14 @@
 session_start();
 
 
-if (isset($_SESSION['usermail'])) { ?>
-
-
-<?php include 'connection.php'; ?>
+if (isset($_SESSION['usermail'])) { 
     
-    
-    <?php include "links.php" ?>
+    require_once('modules/Database.php');
 
-<?php include "header.php" ?>
 
-<?php 
+    $db = new Database();
+
+require_once ('layouts/header.php');
     
 $ID = isset($_GET['id']) ? $_GET['id'] : '';
                                     
@@ -23,9 +20,8 @@ $do = isset($_GET['do']) ? $_GET['do'] : 'Manage';
 if ( $do == 'Manage'){
 
     
-    $stmtManage = $con->prepare("SELECT * FROM users");
-    $stmtManage->execute();
-    $usersRegistered = $stmtManage->fetchAll();
+    $db->query("SELECT * FROM users");
+    $usersRegistered = $db->resultSet();
     
     
 ?>
@@ -80,16 +76,16 @@ function myFunction() {
         
         echo "<tr>";
         
-        echo "<td>" . $Reguser['id'] . "</td>";
-        echo "<td>" . $Reguser['firstname'] . "</td>";
-        echo "<td>" . $Reguser['lastname'] . "</td>";
+        echo "<td>" . $Reguser->id . "</td>";
+        echo "<td>" . $Reguser->firstname . "</td>";
+        echo "<td>" . $Reguser->lastname . "</td>";
 
-        echo "<td>" . $Reguser['password'] . "</td>";
-        echo "<td>" . $Reguser['usermail'] . "</td>";
-        echo "<td><img src=" . $Reguser['userpic'] . "></td>";
-        echo "<td class='setting'><a class='btn btn-success' href='members.php?do=Edit&id=" . $Reguser['id'] . "'>تعديل</a> |
+        echo "<td>" . $Reguser->password . "</td>";
+        echo "<td>" . $Reguser->usermail . "</td>";
+        echo "<td><img src=" . $Reguser->userpic . "></td>";
+        echo "<td class='setting'><a class='btn btn-success' href='members.php?do=Edit&id=" . $Reguser->id . "'>تعديل</a> |
         
-        <a class='btn btn-danger confirm' href='members.php?do=Delete&id=" . $Reguser['id'] . "'>حذف</a> |
+        <a class='btn btn-danger confirm' href='members.php?do=Delete&id=" . $Reguser->id . "'>حذف</a> |
                 
         "; 
     
@@ -129,13 +125,11 @@ function myFunction() {
     
 $userId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
                                    
-        $stmt = $con->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
+        $db->query("SELECT * FROM users WHERE id = '$userId' LIMIT 1");
 
-        $stmt->execute(array($userId));
-
-        $row = $stmt->fetch();
+        $row = $db->single();
        
-        $count = $stmt->rowCount();
+        $count = $db->rowCount();
                                    
         if ($count > 0 ) { ?>
             
@@ -148,27 +142,27 @@ $userId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 
     
     <div class="form-group">
       <label>الإسم الأول</label>
-      <input type="text"  name="firstname" value="<?php echo $row['firstname'] ?>" class="form-control" />
+      <input type="text"  name="firstname" value="<?php echo $row->firstname ?>" class="form-control" />
     </div>
     
     <div class="form-group">
       <label>الإسم الأخير</label>
-      <input type="text"  name="lastname" value="<?php echo $row['lastname'] ?>" class="form-control" />
+      <input type="text"  name="lastname" value="<?php echo $row->lastname ?>" class="form-control" />
     </div>
 
     <div class="form-group">
       <label>الرقم السري</label>
-      <input type="password"  name="password" value="<?php echo $row['password'] ?>" class="form-control" />
+      <input type="password"  name="password" value="<?php echo $row->password ?>" class="form-control" />
     </div>
       
       <div class="form-group">
       <label>البريد الإلكتروني</label>
-      <input type="email"  name="usermail" value="<?php echo $row['usermail'] ?>" class="form-control" />
+      <input type="email"  name="usermail" value="<?php echo $row->usermail ?>" class="form-control" />
     </div>
       
       <div class="form-group">
       <label>الصورة الشخصية</label>
-      <input type="file" name="userpic" value="<?php echo $row['userpic'] ?>" class="form-control" />
+      <input type="file" name="userpic" value="<?php echo $row->userpic ?>" class="form-control" />
     </div>
 
     <div class="form-button">
@@ -185,7 +179,7 @@ $userId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 
     
 } else if($do == 'Update') {
     echo "<h1 class='text-center event-det'>تعديل الحساب</h1>";
-    
+
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $userId = $_POST['id'];
@@ -213,9 +207,19 @@ move_uploaded_file($filetmp, './assets/images/uploads/'.$r.$d.$filename);
     
 move_uploaded_file($filetmp, '../assets/images/uploads/'.$r.$d.$filename);
                 
-        $stmt = $con->prepare("UPDATE users SET firstname = ?, lastname = ?, usermail = ?, password = ?, userpic = ? WHERE id = ? ");
-        $stmt->execute(array($firstname, $lastname, $usermail, $password, $finalDes, $userId));
-        
+
+        $db->query("UPDATE users SET firstname = :firstname, lastname = :lastname, usermail = :usermail, password = :password, userpic = :userpic WHERE id = :id ");        
+
+        $db->bind(':firstname', $firstname);
+        $db->bind(':lastname', $lastname);
+        $db->bind(':usermail', $usermail);
+        $db->bind(':password', $password);
+        $db->bind(':userpic', $finalDes);
+        $db->bind(':id', $userId);
+       
+
+        $db->execute();
+
         echo "<p class='alert alert-success redirect'>تم التعديل بنجاح سيتم التحديث في غضون 2 ثانية</p>";
 
  
@@ -233,18 +237,14 @@ move_uploaded_file($filetmp, '../assets/images/uploads/'.$r.$d.$filename);
     
     $userId = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
                                    
-        $stmt = $con->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
+        $db->query("SELECT * FROM users WHERE id = '$userId' LIMIT 1");
 
-        $stmt->execute(array($userId));
-       
-        $count = $stmt->rowCount();
+        $count = $db->rowCount();
                                    
         if ($count > 0 ) { 
          
-        $stmt = $con->prepare("DELETE FROM users WHERE id = :id ");
+        $db->query("DELETE FROM users WHERE id = '$userId' ");
             
-        $stmt->bindParam(":id", $userId);
-
         $stmt->execute();
             
 
@@ -270,7 +270,7 @@ move_uploaded_file($filetmp, '../assets/images/uploads/'.$r.$d.$filename);
 ?>
 
 <!-- End projects section -->
-<?php include 'footer.php' ?>
+<?php require_once ('layouts/footer.php'); ?>
 
 <script>
 

@@ -2,7 +2,8 @@
 // start session
 session_start();
 // connection to data base
-include 'connection.php'; 
+require_once('modules/Database.php');
+$db = new Database(); 
 // when the user signed in
 if (isset($_SESSION['usermail'])) { 
     // get the id sent by link
@@ -16,8 +17,8 @@ if (isset($_SESSION['usermail'])) {
     $fullname = $_SESSION['firstname'] . ' ' . $_SESSION['lastname'];
     $user_id = $_SESSION['ID'];
     // put replies data in the database         
-    $query = $con->prepare("INSERT INTO replies (reply, comment_id, date, comment_name, user_id, reply_event) VALUES ('$reply', '$comment_id', '$reply_date', '$fullname', '$user_id', '$id')");
-        $query->execute(array($reply, $comment_id, $reply_date, $fullname, $user_id, $id));  
+    $db->query("INSERT INTO replies (reply, comment_id, date, comment_name, user_id, reply_event) VALUES ('$reply', '$comment_id', '$reply_date', '$fullname', '$user_id', '$id')");
+        $db->execute();  
     // redirect back one page
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 }

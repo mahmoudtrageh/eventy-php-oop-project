@@ -2,13 +2,14 @@
     // start session
     session_start();
     // connection to data base
-    include 'connection.php'; 
+    require_once('modules/Database.php');
+
+    $db = new Database();
     // when the user signed in
     if (isset($_SESSION['usermail'])) { 
-    // add links page     
-    include "links.php";
+
     // add header section    
-    include "header.php";
+    require_once ('layouts/header.php');
     // get data by edit reply form
     $reply = $_POST['reply_content'];
     $comment_id = $_POST['comment_id'];
@@ -34,5 +35,5 @@
     } else {
         header('location:login.php');
     }
-    include 'footer.php';
+    require_once ('layouts/footer.php');
 ?>

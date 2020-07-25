@@ -2,7 +2,8 @@
 // start session
 session_start();
 // connection to database 
-include 'connection.php'; 
+require_once('modules/Database.php');
+$db = new Database();
 // part of where the users signed in with mail
 if (isset($_SESSION['usermail'])) {
 // end
@@ -14,8 +15,8 @@ if (isset($_SESSION['usermail'])) {
     $comment_date = $_POST['comment_date'];
     $comment_content = $_POST['comment_content'];
 // put the comments in the database 
-    $query = $con->prepare("INSERT INTO comments (user_id, comment, date, comment_event, comment_name ) VALUES ('$user_id', '$comment_content', '$comment_date', '$comment_event', '$fullname')");
-    $query->execute(array($user_id, $comment_content, $comment_date, $comment_event, $fullname));  
+    $db->query("INSERT INTO comments (user_id, comment, date, comment_event, comment_name ) VALUES ('$user_id', '$comment_content', '$comment_date', '$comment_event', '$fullname')");
+    $db->execute();  
 // redirect back on page 
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 // message put into notifications 
@@ -24,16 +25,15 @@ if (isset($_SESSION['usermail'])) {
     date_default_timezone_set('Africa/Cairo');
     $current = date('Y-m-d H:i:s');
 // get from database the session as one to otherthing
-    $stmt1 = $con->prepare("SELECT postby FROM events WHERE id='$comment_event'");
-        $stmt1 ->execute();
-        $row1 = $stmt1 ->fetch();
-        $count1 = $stmt1 ->rowCount();
+    $db->query("SELECT postby FROM events WHERE id='$comment_event'");
+        $row1 = $db->single();
+        $count1 = $db->rowCount();
         if ($count1  > 0 ) {
-            $_SESSION['postby'] = $row1['postby'];
+            $_SESSION['postby'] = $row1->postby;
         }
     $post_by = $_SESSION['postby'];        
 // put the notifications in the database 
-    $noti = $con->prepare(" INSERT INTO notifications ( message, read_n, date, noti_to ) VALUES ('$message', '$read_n', '$current', '$post_by')");
-    $noti->execute(array($message, $read_n, $current, $post_by));
+    $db->query(" INSERT INTO notifications ( message, read_n, date, noti_to ) VALUES ('$message', '$read_n', '$current', '$post_by')");
+    $db->execute();
 }
 ?>
